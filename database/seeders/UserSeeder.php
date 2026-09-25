@@ -26,7 +26,7 @@ class UserSeeder extends Seeder
         $empBudi = Employee::where('nip', '198204182006041005')->first();
         $empRizky = Employee::where('nip', '198609252009121006')->first();
 
-        $defaultPassword = Hash::make('password123');
+        $defaultPassword = Hash::make('passjkt');
 
         $users = [
             [
