@@ -6,7 +6,6 @@ use App\Models\Employee;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
@@ -26,7 +25,8 @@ class UserSeeder extends Seeder
         $empBudi = Employee::where('nip', '198204182006041005')->first();
         $empRizky = Employee::where('nip', '198609252009121006')->first();
 
-        $defaultPassword = Hash::make('passjkt');
+        // Model User menggunakan cast 'password' => 'hashed', sehingga gunakan plain string agar tidak ter-hash dua kali
+        $defaultPassword = 'passjkt';
 
         $users = [
             [
@@ -81,16 +81,6 @@ class UserSeeder extends Seeder
                 ['email' => $userData['email']],
                 $userData
             );
-        }
-
-        // Update existing developer/admin user if exists
-        $veggaUser = User::where('name', 'vegga_admin')->first();
-        if ($veggaUser) {
-            $veggaUser->update([
-                'role_id' => $adminRole?->id,
-                'username' => 'vegga_admin',
-                'is_active' => true,
-            ]);
         }
     }
 }

@@ -21,13 +21,13 @@ class TravelRequest extends Model
     protected $fillable = [
         'sprint_number',
         'sprint_date',
-        'sprint_file_path',
         'activity_name',
         'activity_location',
         'activity_start_date',
         'activity_end_date',
         'budget_allocation_id',
         'submitted_by',
+        'sprint_file_path',
         'status',
         'submitted_at',
     ];
@@ -57,21 +57,26 @@ class TravelRequest extends Model
         return $this->hasMany(TravelRequestPersonnel::class);
     }
 
-    public function personnel(): HasManyThrough
+    public function personnel()
     {
-        return $this->hasManyThrough(
-            Employee::class,
-            TravelRequestPersonnel::class,
-            'travel_request_id',
-            'id',
-            'id',
-            'employee_id'
-        );
+        return $this->belongsToMany(Employee::class, 'travel_request_personnel')
+            ->withPivot(['activity_start_date', 'activity_end_date'])
+            ->withTimestamps();
     }
 
     public function costCalculation(): HasOne
     {
         return $this->hasOne(TravelCostCalculation::class);
+    }
+
+    public function costItems(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            TravelCostItem::class,
+            TravelCostCalculation::class,
+            'travel_request_id',
+            'calculation_id'
+        );
     }
 
     public function verifications(): HasMany
